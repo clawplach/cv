@@ -73,12 +73,12 @@
 \newcommand{\header}[3]{%
   \begin{tikzpicture}[remember picture,overlay]
     \node [rectangle, fill=fillheader, anchor=north, minimum width=\paperwidth, minimum height=4cm] (box) at (current page.north){};
-    \node [anchor=center] (name) at (box) {%
-      \fontsize{40pt}{72pt}\color{header}%
+    \node [anchor=center] (name) at (box) {
+      \fontsize{40pt}{72pt}\color{header}
       {\thinfont #1}{\bodyfont  #2}
     };
-    \node [anchor=north] at (name.south) {%
-      \fontsize{14pt}{24pt}\color{header}%
+    \node [anchor=north] at (name.south) {
+      \fontsize{14pt}{24pt}\color{header}
       \thinfont #3%
     };
   \end{tikzpicture}
@@ -130,20 +130,52 @@
 % List environment %
 %%%%%%%%%%%%%%%%%%%%
 
+% use the ‘tabu’ package so entries (rows) can be split across page boundaries
+\usepackage{tabu}
+% the ‘longtable’ package is a required dependency of the ‘longtabu’ environment
+\usepackage{longtable}
+
 \setlength{\tabcolsep}{0pt}
-\newenvironment{entrylist}{%
-  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}ll}
-}{%
-  \end{tabular*}
+
+\newenvironment{entrylist}
+{% opening section
+    \begin {longtabu*} to \textwidth % set the column widths to the width of the contents
+        {
+            % suppress the normal intercolumn space and just fill with elastic space
+            @{\extracolsep{\fill}}
+            ll % let align the column contents
+        }
 }
+{% closing section
+    \end{longtabu*}
+}
+
+% Alter the \bfseries command to use the heading font and color
 \renewcommand{\bfseries}{\headingfont\color{headercolor}}
-\newcommand{\entry}[4]{%
-  #1&\parbox[t]{11.8cm}{%
-    \textbf{#2}%
-    \hfill%
-    {\footnotesize\addfontfeature{Color=lightgray} #3}\\%
-    #4\vspace{\parsep}%
-  }\\}
+
+% entry command
+% Arguments:
+%   #1 = date range
+%   #2 = subject
+%   #3 = title/position
+%   #4 = details
+\newcommand{\entry}[4]
+{
+    #1 &
+    \parbox[t]{11.8cm}
+    { % the content of this paragraph box
+        \textbf{#2} % make the subject bold
+        \hfill % fill the horizontal space between the horizontal boxes
+        { % subject
+            \footnotesize\addfontfeature{Color=lightgray} #3
+        }\\
+        { % this section is for the description of the subject and title
+            \obeycr
+            #4\vspace{\parsep}
+            \restorecr
+        }
+    }\\
+}
 
 
 %%%%%%%%%%%%%%
@@ -153,19 +185,19 @@
 \RequirePackage[absolute,overlay]{textpos}
 \setlength{\TPHorizModule}{1cm}
 \setlength{\TPVertModule}{1cm}
-\newenvironment{aside}{%
-  \let\oldsection\section
-  \renewcommand{\section}[1]{
-    \par\vspace{\baselineskip}{\Large\headingfont\color{headercolor} ##1}
-  }
-  \begin{textblock}{3.6}(1.5, 4.33)
-  \begin{flushright}
-  \obeycr
-}{%
-  \restorecr
-  \end{flushright}
-  \end{textblock}
-  \let\section\oldsection
+\newenvironment{aside}{
+    \let\oldsection\section
+    \renewcommand{\section}[1]{
+        \par\vspace{\baselineskip}{\Large\headingfont\color{headercolor} ##1}
+    }
+    \begin{textblock}{3.6}(1.5, 4.33)
+    \begin{flushright}
+    \obeycr
+}{
+    \restorecr
+    \end{flushright}
+    \end{textblock}
+    \let\section\oldsection
 }
 
 

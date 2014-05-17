@@ -1,4 +1,15 @@
-*.pdf
 *.log
+
+# *TeX temporary build artifacts
 *.aux
+*.bbl
+*.blg
+*.toc
+
+# compiled documents
+*.dvi
+*.pdf
+*.xdv
+
+# Vim
 *.swp
