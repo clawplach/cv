@@ -1,10 +1,30 @@
-xelatex:
-	xelatex cv.tex
+SHELL = /bin/sh
 
-clean:
-	-rm -f *.log *.aux *.bbl *.bcf *.blg *.ilg *.toc *.lof *.lot *.idx *.ind *.out *.run.xml
+.SUFFIXES:
+.SUFFIXES: .tex
 
-cleanall: clean
-	-rm -f *.dvi *.xdv *.ps *.pdf
+COMPILER = xelatex
+spellchecker = aspell -t -c
+srcdir = $(PWD)
+builddir = $(srcdir)/build
+directories = $(builddir)
 
-.PHONY: xelatex clean
+all : $(directories) spellcheck *.pdf
+
+$(directories) :
+	@-mkdir -p $@
+
+.PHONY: spellcheck
+vpath %.tex sections
+spellcheck : *.tex
+	$(spellchecker) $<
+vpath
+
+%.pdf : %.tex
+	$(COMPILER) -output-directory=$(builddir) $<
+	# The compiler needs rerun to incorporate PGF/TikZ input
+	$(COMPILER) -output-directory=$(builddir) $<
+
+.PHONY: clean
+clean :
+	@-rm -rf $(builddir)

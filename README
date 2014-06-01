@@ -1,4 +1,16 @@
-Prerequisites:
+Please see http://www.tug.org/ for information about *Tex and
+downloads for different platforms.
 
-How to build:
-
+1. Install the following prerequisites:
+    (a) texlive-xetex
+    (b) texlive-latex
+    () texlive-
+    () texlive-
+    () texlive-
+    () texlive-
+    () pgf
+    () aspell
+    () aspell-dict-<your_locale>
+2. Modify the sections contained in the 'sections' subdirectory.
+3. Run 'make' from the root directory of the project.
+4. Use the generated PDF, XDV, or HTML files in 'build' subdirectory.
